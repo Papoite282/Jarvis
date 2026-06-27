@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src https://cdnjs.cloudflare.com data:; script-src 'self'; connect-src 'self';" />
+<title>Jarvis</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.31.0/iconfont/tabler-icons.min.css" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="frame">
+    <div class="titlebar">
+      <div class="dots">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+      </div>
+      <div class="brand">J.A.R.V.I.S.</div>
+      <div class="status">
+        <span id="status-dot" class="status-dot"></span>
+        <span id="status-text">online</span>
+      </div>
+    </div>
+
+    <div id="hud" class="hud">
+      <div class="rings">
+        <div class="ring ring-outer"></div>
+        <div class="ring ring-mid"></div>
+        <div class="ring-core"></div>
+        <i class="ti ti-bolt core-icon" aria-hidden="true"></i>
+      </div>
+      <p id="hud-label" class="hud-label">pronto</p>
+      <div class="wave" id="wave">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="panels">
+      <div class="panel">
+        <p class="panel-title">tarefa atual</p>
+        <div id="task-body" class="task-body">
+          <p class="task-idle">nenhuma tarefa em execução</p>
+        </div>
+      </div>
+      <div class="panel">
+        <p class="panel-title">comandos recentes</p>
+        <div id="log-body" class="log-body"></div>
+      </div>
+    </div>
+
+    <div id="permission" class="permission hidden">
+      <p id="permission-title" class="permission-title"></p>
+      <p id="permission-desc" class="permission-desc"></p>
+      <div class="permission-actions">
+        <button id="permission-deny" class="btn btn-deny">Negar</button>
+        <button id="permission-allow" class="btn btn-allow">Permitir</button>
+      </div>
+    </div>
+
+    <div id="transcript" class="transcript"></div>
+
+    <div class="composer">
+      <button id="mic-btn" class="icon-btn mic" aria-label="Ativar microfone">
+        <i class="ti ti-microphone" aria-hidden="true"></i>
+      </button>
+      <input id="text-input" class="text-input" type="text" placeholder="Fale ou digite um comando..." />
+      <button id="send-btn" class="icon-btn send" aria-label="Enviar">
+        <i class="ti ti-send" aria-hidden="true"></i>
+      </button>
+      <button id="stop-btn" class="icon-btn stop hidden" aria-label="Parar">
+        <i class="ti ti-player-stop" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>
