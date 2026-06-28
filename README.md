@@ -1,3 +1,7 @@
+
+
+
+<img width="741" height="831" alt="Captura de ecrã 2026-06-28, às 19 15 10" src="https://github.com/user-attachments/assets/8d7019f6-3769-4b07-9515-e5f0ed869074" />
 # J.A.R.V.I.S.
 
 > A personal AI assistant desktop app for macOS, powered by the Claude Agent SDK.
