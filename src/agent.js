@@ -1,8 +1,38 @@
 import os from 'node:os';
 import path from 'node:path';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { query } from '@anthropic-ai/claude-agent-sdk';
 import { getSessionId, setSessionId, appendTranscript, clearAll, getCwd } from './state.js';
+
+const __agentDir = path.dirname(fileURLToPath(import.meta.url));
+
+// Resolve o path do binário claude em dev (node_modules) e em produção (asar.unpacked)
+function getClaudeBinaryPath() {
+  const plat = `${process.platform}-${process.arch}`; // ex: darwin-arm64
+
+  // App packaged: binários ficam em app.asar.unpacked/ (via asarUnpack)
+  if (process.resourcesPath) {
+    const base = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', '@anthropic-ai');
+    const candidates = [
+      // claude-code path padrão (postinstall copia aqui)
+      path.join(base, 'claude-code', 'bin', 'claude.exe'),
+      // claude-agent-sdk nested binary (platform-specific)
+      path.join(base, 'claude-agent-sdk', 'node_modules', `@anthropic-ai`, `claude-agent-sdk-${plat}`, 'claude'),
+      // claude-code nested binary (platform-specific)
+      path.join(base, 'claude-code', 'node_modules', `@anthropic-ai`, `claude-code-${plat}`, 'claude'),
+    ];
+    for (const p of candidates) {
+      if (existsSync(p)) return p;
+    }
+  }
+
+  // Dev: navegar de src/ para a raiz do projecto
+  const devPath = path.join(__agentDir, '..', 'node_modules', '@anthropic-ai', 'claude-code', 'bin', 'claude.exe');
+  if (existsSync(devPath)) return devPath;
+
+  return undefined; // SDK tenta o PATH do sistema
+}
 
 // Lê os MCP servers configurados no Claude Desktop e herda-os automaticamente
 function loadMcpServers() {
@@ -81,6 +111,7 @@ async function runCommand(promptText, { onEvent, onPermissionRequest }) {
 
   appendTranscript('user', promptText, cwd);
 
+  const claudeBin = getClaudeBinaryPath();
   const options = {
     cwd,
     permissionMode: 'default',
@@ -89,6 +120,7 @@ async function runCommand(promptText, { onEvent, onPermissionRequest }) {
     resume: sessionId,
     mcpServers: loadMcpServers(),
     systemPrompt: { type: 'preset', preset: 'claude_code', append: JARVIS_PERSONALITY },
+    ...(claudeBin && { pathToClaudeCodeExecutable: claudeBin }),
   };
 
   let finalResult = null;

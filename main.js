@@ -11,7 +11,16 @@ import { startVoice, stopVoice } from './src/voice.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WORKSPACE = path.join(os.homedir(), 'Claude');
+
+// .env no project root carregado imediatamente (útil em dev)
 dotenv.config({ path: path.join(__dirname, '.env') });
+
+function loadEnv() {
+  // Em app packaged, o .env fica em ~/Library/Application Support/Jarvis/.env
+  // Esta função é chamada depois de app.whenReady() para usar app.getPath()
+  const userDataEnv = path.join(app.getPath('userData'), '.env');
+  if (fs.existsSync(userDataEnv)) dotenv.config({ path: userDataEnv, override: true });
+}
 
 let mainWindow;
 let tray = null;
@@ -93,10 +102,16 @@ function createWindow() {
       mainWindow.webContents.send('jarvis:event', { type: 'restore', transcript });
     }
     if (!hasCredentials()) {
+      const userDataEnv = path.join(app.getPath('userData'), '.env');
       mainWindow.webContents.send('jarvis:event', {
         type: 'setup-required',
         message:
-          'Nenhuma credencial encontrada. Rode "npx claude setup-token" no terminal do projeto, copie o token e cole em .env como CLAUDE_CODE_OAUTH_TOKEN, depois reinicie o app.',
+          `Nenhuma credencial encontrada.\n\n` +
+          `1. No terminal: npx claude setup-token\n` +
+          `2. Copia o token gerado\n` +
+          `3. Cria o ficheiro:\n   ${userDataEnv}\n` +
+          `   Com o conteúdo: CLAUDE_CODE_OAUTH_TOKEN=<token>\n\n` +
+          `Depois reinicia o Jarvis.`,
       });
     }
   });
@@ -122,6 +137,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  loadEnv();
   createWindow();
   createTray();
   globalShortcut.register('Alt+Space', toggleWindow);
