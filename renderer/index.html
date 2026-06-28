@@ -14,9 +14,22 @@
         <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
       </div>
       <div class="brand">J.A.R.V.I.S.</div>
-      <div class="status">
-        <span id="status-dot" class="status-dot"></span>
-        <span id="status-text">online</span>
+      <div class="titlebar-right">
+        <div class="cwd-picker" id="cwd-picker">
+          <button id="cwd-btn" class="cwd-btn" title="Pasta de trabalho atual">
+            <i class="ti ti-folder" aria-hidden="true"></i>
+            <span id="cwd-name">…</span>
+            <i class="ti ti-chevron-down cwd-chevron" aria-hidden="true"></i>
+          </button>
+          <div id="cwd-dropdown" class="cwd-dropdown hidden"></div>
+        </div>
+        <div class="status">
+          <span id="status-dot" class="status-dot"></span>
+          <span id="status-text">online</span>
+        </div>
+        <button id="reset-btn" class="titlebar-btn" title="Nova sessão" aria-label="Limpar conversa e iniciar nova sessão">
+          <i class="ti ti-rotate-clockwise" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
 
@@ -53,6 +66,15 @@
         <button id="permission-deny" class="btn btn-deny">Negar</button>
         <button id="permission-allow" class="btn btn-allow">Permitir</button>
       </div>
+    </div>
+
+    <div id="search-bar" class="search-bar hidden">
+      <i class="ti ti-search search-icon" aria-hidden="true"></i>
+      <input id="search-input" class="search-input" type="text" placeholder="Pesquisar na conversa…" />
+      <span id="search-count" class="search-count"></span>
+      <button id="search-close" class="search-close" aria-label="Fechar pesquisa">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
     </div>
 
     <div id="transcript" class="transcript"></div>

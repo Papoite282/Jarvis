@@ -4,3 +4,4 @@ dist/
 *.log
 native/speech-cli
 .claude/settings.local.json
+.DS_Store
